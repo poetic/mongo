@@ -87,7 +87,11 @@ var replaceMeteorAtomWithMongo = function (document) {
   if (document instanceof Mongo.ObjectID) {
     return new MongoDB.ObjectID(document.toHexString());
   }
-  if (document instanceof MongoDB.Timestamp) {
+  var isNativeType = document instanceof MongoDB.Timestamp
+    || document instanceof MongoDB.Int32
+    || document instanceof MongoDB.Long
+    || document instanceof MongoDB.Double;
+  if (isNativeType) {
     // For now, the Meteor representation of a Mongo timestamp type (not a date!
     // this is a weird internal thing used in the oplog!) is the same as the
     // Mongo representation. We need to do this explicitly or else we would do a
